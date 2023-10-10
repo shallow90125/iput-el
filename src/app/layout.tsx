@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className=" dark">
       <body className={font.className}>
         <Providers>
-          <div className=" flex min-h-[100dvh] flex-col">
+          <div className=" flex min-h-[100dvh] flex-col bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-default-foreground to-black">
             <header className=" grid h-16 flex-none place-items-center p-4">
               Header
             </header>
