@@ -1,3 +1,9 @@
+import { Card, CardBody } from "@nextui-org/card";
+
 export default function Home() {
-  return <>Main</>;
+  return (
+    <Card>
+      <CardBody>Main</CardBody>
+    </Card>
+  );
 }
