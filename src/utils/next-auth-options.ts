@@ -1,4 +1,8 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { initApp } from "./init-app";
@@ -6,9 +10,10 @@ import { initApp } from "./init-app";
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     Credentials({
-      name: "Email",
+      name: "signin",
+      id: "signin",
       credentials: {
-        username: { label: "username", type: "email" },
+        email: { label: "email", type: "email" },
         password: { label: "password", type: "password" },
       },
       type: "credentials",
@@ -19,7 +24,31 @@ export const nextAuthOptions: NextAuthOptions = {
           const auth = getAuth();
           const userCredential = await signInWithEmailAndPassword(
             auth,
-            credentials.username,
+            credentials.email,
+            credentials.password,
+          );
+          return { user: userCredential.user, id: userCredential.user.uid };
+        } catch (error) {
+          return null;
+        }
+      },
+    }),
+    Credentials({
+      name: "signup",
+      id: "signup",
+      credentials: {
+        email: { label: "email", type: "email" },
+        password: { label: "password", type: "password" },
+      },
+      type: "credentials",
+      authorize: async (credentials, req) => {
+        try {
+          if (!credentials) return null;
+          initApp();
+          const auth = getAuth();
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            credentials.email,
             credentials.password,
           );
           return { user: userCredential.user, id: userCredential.user.uid };
@@ -29,6 +58,9 @@ export const nextAuthOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/signin",
+  },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     jwt: async ({ token, user }) => {
