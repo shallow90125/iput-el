@@ -16,12 +16,12 @@ const config: Config = {
         dark: {
           colors: {
             default: {
-              foreground: "#2c4018",
-              DEFAULT: "#88ff40",
-            },
-            primary: {
               foreground: "#88ff40",
               DEFAULT: "#2c4018",
+            },
+            primary: {
+              foreground: "#2c4018",
+              DEFAULT: "#88ff40",
             },
           },
         },
