@@ -1,27 +1,33 @@
 "use client";
-import {
-  Button,
-  Modal,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Select,
-  SelectItem,
-  Switch,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Button, Switch, useDisclosure } from "@nextui-org/react";
 // import {Button} from "@nextui-org/button";
+import TimeSelect from "@/components/TimeSelect";
 import { useState } from "react";
-import { hour, minute } from "./time";
+import EditModal from "./EditModal";
 
 export default function App() {
-  const [state, setState] = useState("");
-  const [state2, setState2] = useState("");
-  const [alarm, setAlarm] = useState<{ hour: string; minute: string }[]>([]);
+  const [state, setState] = useState(0);
+  const [state2, setState2] = useState(0);
+  const [alarm, setAlarm] = useState<{ hour: number; minute: number }[]>([]);
+  const [key, setKey] = useState(0);
 
   const addalarm = () => {
-    setAlarm([...alarm, { hour: state, minute: state2 }]);
-    console.log(alarm);
+    setAlarm((a) => {
+      // const b = [...a, { hour: state, minute: state2 }];
+
+      const b = a;
+      b.push({ hour: state, minute: state2 });
+
+      return [
+        ...b.sort((a, b) => {
+          a.hour - b.hour;
+          if (a.hour == b.hour) {
+            return a.minute - b.minute;
+          }
+          return a.hour - b.hour;
+        }),
+      ];
+    });
   };
 
   const deleteItem = (index: number) => {
@@ -38,28 +44,10 @@ export default function App() {
   return (
     <div className="h-full w-full">
       <div className="flex">
-        <Select
-          label="時"
-          className="mb-4 max-w-xs"
-          onChange={(event) => setState(event.target.value)}
-        >
-          {hour.map((time) => (
-            <SelectItem key={time.value} value={time.value}>
-              {time.label}
-            </SelectItem>
-          ))}
-        </Select>
-        <Select
-          label="分"
-          className="mb-4 max-w-xs"
-          onChange={(event) => setState2(event.target.value)}
-        >
-          {minute.map((time) => (
-            <SelectItem key={time.value} value={time.value}>
-              {time.label}
-            </SelectItem>
-          ))}
-        </Select>
+        <TimeSelect
+          onChange={(event) => setState(Number(event.target.value))}
+          onChange2={(event) => setState2(Number(event.target.value))}
+        />
         <Button onClick={addalarm}>追加</Button>
       </div>
       {alarm.map((item, index) => (
@@ -72,28 +60,26 @@ export default function App() {
           </p>
           <Switch defaultSelected aria-label="Automatic updates" />
           <Button onClick={() => deleteItem(index)}>削除</Button>
-          <Button onPress={onOpen}>編集</Button>
+          <Button
+            onPress={() => {
+              setKey(index);
+              setAlarm([...alarm]);
+              onOpen();
+            }}
+          >
+            編集
+          </Button>
         </div>
       ))}
       <div>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">編集</ModalHeader>
-
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button color="primary" onPress={onClose}>
-                    Action
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+        <EditModal
+          alarm={alarm}
+          setAlarm={setAlarm}
+          index={key}
+          onOpen={onOpen}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+        />
       </div>
     </div>
   );
