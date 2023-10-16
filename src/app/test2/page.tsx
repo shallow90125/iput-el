@@ -6,9 +6,12 @@ import { useState } from "react";
 import EditModal from "./EditModal";
 
 export default function App() {
-  const [state, setState] = useState(0);
-  const [state2, setState2] = useState(0);
-  const [alarm, setAlarm] = useState<{ hour: number; minute: number }[]>([]);
+  const [hourstate, setHourstate] = useState(0);
+  const [minutestate, setMinutestate] = useState(0);
+  const [weekstate, setWeekstate] = useState(0);
+  const [alarm, setAlarm] = useState<
+    { hour: number; minute: number; week: number[] }[]
+  >([]);
   const [key, setKey] = useState(0);
 
   const addalarm = () => {
@@ -16,7 +19,11 @@ export default function App() {
       // const b = [...a, { hour: state, minute: state2 }];
 
       const b = a;
-      b.push({ hour: state, minute: state2 });
+      b.push({
+        hour: hourstate,
+        minute: minutestate,
+        week: [weekstate],
+      });
 
       return [
         ...b.sort((a, b) => {
@@ -37,6 +44,11 @@ export default function App() {
     // console.log(a);
   };
 
+  const savealarm = () => {
+    const a = alarm;
+    console.log(a);
+  };
+
   // useEffect(() => {}, [alarm]);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -45,8 +57,8 @@ export default function App() {
     <div className="h-full w-full">
       <div className="flex">
         <TimeSelect
-          onChange={(event) => setState(Number(event.target.value))}
-          onChange2={(event) => setState2(Number(event.target.value))}
+          onChange={(event) => setHourstate(Number(event.target.value))}
+          onChange2={(event) => setMinutestate(Number(event.target.value))}
         />
         <Button onClick={addalarm}>追加</Button>
       </div>
@@ -54,10 +66,12 @@ export default function App() {
         <div style={{ display: "flex", flexDirection: "row" }}>
           <p className="mb-3 mr-10">
             <p className="text-4xl">
-              {item.hour}：{item.minute}
+              {item.hour}：{item.minute.toString().padStart(2, "0")}
               {/* <p>{index}</p> */}
             </p>
+            <p className="ml-1 mt-4 text-default-500">{weekstate}</p>
           </p>
+
           <Switch defaultSelected aria-label="Automatic updates" />
           <Button onClick={() => deleteItem(index)}>削除</Button>
           <Button
@@ -69,6 +83,7 @@ export default function App() {
           >
             編集
           </Button>
+          <Button onClick={() => savealarm()}>保存</Button>
         </div>
       ))}
       <div>
