@@ -6,7 +6,7 @@ import UserField from "./UserField";
 export default async function Header() {
   const session = await getServerSession();
   return (
-    <header className=" sticky top-0 z-10 flex h-16 flex-none place-items-center gap-4 border-b border-divider p-3 pl-5">
+    <header className=" sticky top-0 z-10 flex h-16 flex-none place-items-center gap-3 border-b border-divider p-3 pl-3 sm:gap-4 sm:p-3 sm:pl-5">
       <div className=" flex-none">
         <Link
           href="/"

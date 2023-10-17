@@ -23,6 +23,10 @@ const config: Config = {
               foreground: "#2c4018",
               DEFAULT: "#88ff40",
             },
+            danger: {
+              foreground: "#2c4018",
+              DEFAULT: "#88ff40",
+            },
           },
         },
       },
