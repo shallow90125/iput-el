@@ -1,11 +1,11 @@
 "use client";
 
+import EditModal from "@/components/EditModal";
 import TimeSelect from "@/components/TimeSelect";
 import WeekGroup from "@/components/WeekGroup";
 import { Alarm } from "@/types/Alarm";
 import { Button, Divider, Switch, useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
-import EditModal from "./EditModal";
 
 export default function Test2() {
   const [alarm, setAlarm] = useState<Alarm[]>([]);

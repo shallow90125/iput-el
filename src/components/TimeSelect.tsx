@@ -1,4 +1,4 @@
-import { hour, minute } from "@/app/test2/time";
+import { hours, minutes } from "@/utils/numbers";
 import { Select, SelectItem } from "@nextui-org/react";
 
 type Props = {
@@ -13,25 +13,27 @@ export default function TimeSelect(props: Props): React.ReactNode {
     <div className=" flex flex-none gap-2">
       <Select
         label="時"
+        items={hours.map((hour) => ({ value: hour }))}
         onChange={(event) => props.onHourChange(Number(event.target.value))}
         defaultSelectedKeys={[props.defaultHour.toString()]}
       >
-        {hour.map((time) => (
-          <SelectItem key={time.value} value={time.value}>
-            {time.label}
+        {(hour) => (
+          <SelectItem key={hour.value} value={hour.value}>
+            {hour.value.toString()}
           </SelectItem>
-        ))}
+        )}
       </Select>
       <Select
         label="分"
+        items={minutes.map((minute) => ({ value: minute }))}
         onChange={(event) => props.onMinuteChange(Number(event.target.value))}
         defaultSelectedKeys={[props.defaultMinute.toString()]}
       >
-        {minute.map((time) => (
-          <SelectItem key={time.value} value={time.value}>
-            {time.label}
+        {(minute) => (
+          <SelectItem key={minute.value} value={minute.value}>
+            {minute.value.toString()}
           </SelectItem>
-        ))}
+        )}
       </Select>
     </div>
   );
