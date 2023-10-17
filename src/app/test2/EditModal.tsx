@@ -1,86 +1,84 @@
 "use client";
 
 import TimeSelect from "@/components/TimeSelect";
-import { Button, Modal, ModalContent, ModalHeader } from "@nextui-org/react";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import SetCheckbox from "./SetCheckbox";
-
-type Alarm = {
-  hour: number;
-  minute: number;
-  week: number[];
-};
-
-// React.SetStateAction
+import WeekGroup from "@/components/WeekGroup";
+import { Alarm } from "@/types/Alarm";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 
 type Props = {
-  alarm: Alarm[];
-  index: number;
-  setAlarm: Dispatch<SetStateAction<Alarm[]>>;
   isOpen: boolean;
-  onOpen: () => void;
   onOpenChange: (isOpen: boolean) => void;
+  onSave: (alarm: Alarm) => void;
+  onRemove: () => void;
+  default: Alarm;
 };
 
 export default function EditModal(props: Props): React.ReactNode {
-  const [state, setState] = useState<Alarm>({ hour: 0, minute: 0, week: [] });
+  const [alarm, setAlarm] = useState<Alarm>({ hour: 0, minute: 0, week: [] });
   useEffect(() => {
-    setState(props.alarm[props.index]);
-    // console.log(state);
-  }, [props.alarm, props.index]);
+    setAlarm(props.default);
+  }, [props.default]);
 
   return (
     <Modal isOpen={props.isOpen} onOpenChange={props.onOpenChange}>
       <ModalContent>
         {(onClose) => (
-          <>
+          <ModalContent>
             <ModalHeader className="flex flex-col gap-1">編集</ModalHeader>
-            <TimeSelect
-              onChange={(event) =>
-                setState((v) => ({
-                  hour: Number(event.target.value),
-                  minute: v.minute,
-                  week: v.week,
-                }))
-              }
-              onChange2={(event) =>
-                setState((v) => ({
-                  hour: v.hour,
-                  minute: Number(event.target.value),
-                  week: v.week,
-                }))
-              }
-              defaultSelectedKeys={[
-                props.alarm[props.index].hour.toString() ?? 0,
-              ]}
-              defaultSelectedKeys2={[
-                props.alarm[props.index].minute.toString() ?? 0,
-              ]}
-            />
-            <SetCheckbox></SetCheckbox>
-            <Button color="danger" variant="light" onPress={onClose}>
-              Close
-            </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                const a = props.alarm;
-                a[props.index] = state;
-                props.setAlarm([
-                  ...a.sort((a, b) => {
-                    a.hour - b.hour;
-                    if (a.hour == b.hour) {
-                      return a.minute - b.minute;
-                    }
-                    return a.hour - b.hour;
-                  }),
-                ]);
-                onClose();
-              }}
-            >
-              変更
-            </Button>
-          </>
+
+            <ModalBody>
+              <div>
+                <TimeSelect
+                  onHourChange={(hour) =>
+                    setAlarm((v) => ({ ...v, hour: hour }))
+                  }
+                  onMinuteChange={(minute) =>
+                    setAlarm((v) => ({ ...v, minute: minute }))
+                  }
+                  defaultHour={props.default.hour}
+                  defaultMinute={props.default.minute}
+                />
+              </div>
+              <WeekGroup
+                defaultWeek={props.default.week}
+                onWeekChange={(week) => {
+                  setAlarm((v) => ({ ...v, week: week }));
+                }}
+              />
+            </ModalBody>
+            <ModalFooter className=" flex gap-2">
+              <div className=" grid flex-grow justify-start">
+                <Button
+                  color="danger"
+                  variant="bordered"
+                  onClick={() => {
+                    onClose();
+                    props.onRemove();
+                  }}
+                >
+                  削除
+                </Button>
+              </div>
+              <Button onClick={onClose}>Close</Button>
+              <Button
+                color="primary"
+                onClick={() => {
+                  props.onSave(alarm);
+                  onClose();
+                }}
+              >
+                変更
+              </Button>
+            </ModalFooter>
+          </ModalContent>
         )}
       </ModalContent>
     </Modal>
