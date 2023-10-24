@@ -20,7 +20,17 @@ export default function WeekGroup(props: Props) {
       onChange={(event) => {
         console.log(event);
         setWeek(event as string[]);
-        props.onWeekChange((event as string[]).map((v) => Number(v)));
+        props.onWeekChange(
+          (event as string[])
+            .map((v) => Number(v))
+            .sort((a, b) => {
+              a - b;
+              if (a == b) {
+                return a - b;
+              }
+              return a - b;
+            }),
+        );
       }}
       classNames={{
         base: " p-2 grid place-content-center",

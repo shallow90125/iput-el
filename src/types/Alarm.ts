@@ -1,5 +1,7 @@
 export interface Alarm {
     hour: number;
     minute: number;
-    week: number[]
+    dayOfWeek: number[];
+    isEnabled: boolean;
+    timezone: string;
 }
