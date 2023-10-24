@@ -22,7 +22,13 @@ type Props = {
 };
 
 export default function EditModal(props: Props): React.ReactNode {
-  const [alarm, setAlarm] = useState<Alarm>({ hour: 0, minute: 0, week: [] });
+  const [alarm, setAlarm] = useState<Alarm>({
+    hour: 0,
+    minute: 0,
+    dayOfWeek: [],
+    isEnabled: true,
+    timezone: "Asia/Tokyo",
+  });
   useEffect(() => {
     setAlarm(props.default);
   }, [props.default]);
@@ -33,7 +39,6 @@ export default function EditModal(props: Props): React.ReactNode {
         {(onClose) => (
           <ModalContent>
             <ModalHeader className="flex flex-col gap-1">編集</ModalHeader>
-
             <ModalBody>
               <div>
                 <TimeSelect
@@ -48,9 +53,9 @@ export default function EditModal(props: Props): React.ReactNode {
                 />
               </div>
               <WeekGroup
-                defaultWeek={props.default.week}
+                defaultWeek={props.default.dayOfWeek}
                 onWeekChange={(week) => {
-                  setAlarm((v) => ({ ...v, week: week }));
+                  setAlarm((v) => ({ ...v, dayOfWeek: week }));
                 }}
               />
             </ModalBody>

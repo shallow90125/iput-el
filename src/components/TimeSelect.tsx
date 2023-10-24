@@ -10,7 +10,7 @@ type Props = {
 
 export default function TimeSelect(props: Props): React.ReactNode {
   return (
-    <div className=" flex flex-none gap-2">
+    <div className=" flex w-48 gap-2">
       <Select
         label="時"
         items={hours.map((hour) => ({ value: hour }))}
