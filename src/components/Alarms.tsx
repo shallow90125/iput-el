@@ -6,17 +6,18 @@ import TimeSelect from "@/components/TimeSelect";
 import WeekGroup from "@/components/WeekGroup";
 import WeekStatus from "@/components/WeekStatus";
 import { Alarm } from "@/types/Alarm";
-import { getAlarms } from "@/utils/get-alarms";
 import { postAlarms } from "@/utils/post-alarms";
 import { Button, Divider, useDisclosure } from "@nextui-org/react";
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 
-export default function Test2() {
-  const [isInited, setIsInited] = useState<boolean>(false);
-  const [saved, setSaved] = useState<Alarm[]>([]);
-  const [alarms, setAlarms] = useState<Alarm[]>([]);
-  const [key, setKey] = useState(0);
-  const [added, setAdded] = useState<Alarm>({
+type Props = {
+  alarms: Alarm[];
+};
+
+export default function Alarms(props: Props) {
+  const [alarms, setAlarms] = useState<Alarm[]>(props.alarms);
+  const [modalIndex, setModalIndex] = useState(0);
+  const [newAlarm, setNewAlarm] = useState<Alarm>({
     hour: 0,
     minute: 0,
     dayOfWeek: [],
@@ -24,37 +25,18 @@ export default function Test2() {
     timezone: "Asia/Tokyo",
   });
 
-  const [isPending, startTransition] = useTransition();
+  function addAlarm(addedAlarm: Alarm) {
+    const newAlarms = alarms;
+    newAlarms.push(addedAlarm);
+    setAlarms([...newAlarms]);
+  }
 
-  useEffect(() => {
-    console.log("aaaaa");
-    console.log(alarms.map((a) => a.isEnabled));
-    if (!isInited) {
-      startTransition(async () => {
-        const data = await getAlarms();
-        console.log(data);
-        if (!data) return;
-        setSaved([...data]);
-        setAlarms([...data]);
-        setIsInited(true);
-      });
-    }
-  }, [alarms, isInited]);
+  function removeAlarm(index: number) {
+    const newAlarms = alarms;
+    newAlarms.splice(index, 1);
+    setAlarms([...newAlarms]);
+  }
 
-  const addalarm = () => {
-    setAlarms((a) => {
-      const b = a;
-      b.push(added);
-
-      return [...b];
-    });
-  };
-
-  const deleteItem = (index: number) => {
-    const a = alarms;
-    a.splice(index, 1);
-    setAlarms([...a]);
-  };
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -62,33 +44,25 @@ export default function Test2() {
       <div className=" place-self-streth flex place-content-stretch gap-2">
         <div className=" flex-grow ">
           <TimeSelect
-            onHourChange={(hour) => setAdded((v) => ({ ...v, hour: hour }))}
-            onMinuteChange={(minute) =>
-              setAdded((v) => ({ ...v, minute: minute }))
-            }
+            onHourChange={(hour) => {
+              setNewAlarm((v) => ({ ...v, hour: hour }));
+            }}
+            onMinuteChange={(minute) => {
+              setNewAlarm((v) => ({ ...v, minute: minute }));
+            }}
             defaultHour={0}
             defaultMinute={0}
           />
         </div>
         <div className=" grid flex-none place-items-center gap-2">
-          <Button onClick={addalarm}>追加</Button>
-          <Button
-            onClick={() =>
-              startTransition(async () => {
-                console.log("post");
-                console.log(alarms.map((a) => a.isEnabled));
-                await postAlarms(alarms);
-              })
-            }
-          >
-            保存
-          </Button>
+          <Button onClick={() => addAlarm(newAlarm)}>追加</Button>
+          <Button onClick={() => postAlarms(alarms)}>保存</Button>
         </div>
       </div>
       <WeekGroup
-        defaultWeek={added.dayOfWeek}
+        defaultWeek={newAlarm.dayOfWeek}
         onWeekChange={(week) => {
-          setAdded((v) => ({ ...v, dayOfWeek: week }));
+          setNewAlarm((v) => ({ ...v, dayOfWeek: week }));
         }}
       />
       <Divider />
@@ -124,7 +98,7 @@ export default function Test2() {
                 <Button
                   size="sm"
                   onClick={() => {
-                    setKey(index);
+                    setModalIndex(index);
                     onOpen();
                   }}
                 >
@@ -133,9 +107,12 @@ export default function Test2() {
                 <SwitchState
                   defaultIsEnabled={alarm.isEnabled}
                   onValueChange={(isEnabled) => {
-                    const a = alarms;
-                    a[index] = { ...a[index], isEnabled: isEnabled };
-                    setAlarms([...a]);
+                    const newAlarms = alarms;
+                    newAlarms[index] = {
+                      ...newAlarms[index],
+                      isEnabled: isEnabled,
+                    };
+                    setAlarms([...newAlarms]);
                   }}
                 />
               </div>
@@ -147,13 +124,13 @@ export default function Test2() {
           <EditModal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            onRemove={() => deleteItem(key)}
+            onRemove={() => removeAlarm(modalIndex)}
             onSave={(newAlarm) => {
-              const a = alarms;
-              a[key] = newAlarm;
-              setAlarms([...a]);
+              const newAlarms = alarms;
+              newAlarms[modalIndex] = newAlarm;
+              setAlarms([...newAlarms]);
             }}
-            default={alarms[key]}
+            default={alarms[modalIndex]}
           />
         </div>
       </div>
