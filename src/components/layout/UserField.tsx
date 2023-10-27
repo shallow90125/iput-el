@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/dropdown";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
-import SignInButton from "./SignInButton";
+import SignInButton from "../session/SignInButton";
 
 type Props = {
   session: Session | null;
