@@ -1,6 +1,6 @@
 import { getApps, initializeApp } from "firebase/app";
 
-export async function initApp() {
+export function initApp() {
   if (getApps().length === 0) {
     const firebaseConfig = {
       apiKey: process.env.NEXT_PUBLIC_API_KEY,

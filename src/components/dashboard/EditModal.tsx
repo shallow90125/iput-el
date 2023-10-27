@@ -1,7 +1,7 @@
 "use client";
 
-import TimeSelect from "@/components/TimeSelect";
-import WeekGroup from "@/components/WeekGroup";
+import TimeSelect from "@/components/dashboard/TimeSelect";
+import WeekGroup from "@/components/dashboard/WeekGroup";
 import { Alarm } from "@/types/Alarm";
 import {
   Button,

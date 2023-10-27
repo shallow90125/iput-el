@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 export default function SignInButton(): React.ReactNode {
   return (
     <Button onClick={() => signIn()} color="primary">
-      Sign in
+      Sign In
     </Button>
   );
 }

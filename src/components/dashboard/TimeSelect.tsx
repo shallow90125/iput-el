@@ -12,6 +12,7 @@ export default function TimeSelect(props: Props): React.ReactNode {
   return (
     <div className=" flex w-48 gap-2">
       <Select
+        classNames={{ label: " z-0" }}
         label="時"
         items={hours.map((hour) => ({ value: hour }))}
         onChange={(event) => props.onHourChange(Number(event.target.value))}
@@ -24,6 +25,7 @@ export default function TimeSelect(props: Props): React.ReactNode {
         )}
       </Select>
       <Select
+        classNames={{ label: " z-0" }}
         label="分"
         items={minutes.map((minute) => ({ value: minute }))}
         onChange={(event) => props.onMinuteChange(Number(event.target.value))}
