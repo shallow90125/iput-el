@@ -2,14 +2,12 @@ import Alarms from "@/components/dashboard/Alarms";
 import Redirect from "@/components/Redirect";
 import { getAlarms } from "@/utils/get-alarms";
 import { getStatus } from "@/utils/get-status";
-import { getUserDoc } from "@/utils/get-user-doc";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { getServerSession } from "next-auth";
 
 export default async function Dashboard() {
   const session = await getServerSession();
-  const user = await getUserDoc(session?.user.uid);
   const alarms = await getAlarms();
   const status = await getStatus();
   return (
