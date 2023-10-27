@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { useState, useTransition } from "react";
+import { toast } from "react-toastify";
 
 type Props = {
   alarms: Alarm[];
@@ -52,9 +53,9 @@ export default function Alarms(props: Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <div className="flex flex-col place-content-stretch place-items-center gap-2 place-self-stretch">
-      <div className=" place-self-streth flex place-content-stretch gap-2">
-        <div className=" flex-grow ">
+    <div className="flex flex-col place-content-stretch place-items-center gap-4 place-self-stretch">
+      <div className=" grid gap-2">
+        <div className=" flex place-items-center gap-2">
           <TimeSelect
             onHourChange={(hour) => {
               setNewAlarm((v) => ({ ...v, hour: hour }));
@@ -65,17 +66,16 @@ export default function Alarms(props: Props) {
             defaultHour={0}
             defaultMinute={0}
           />
-        </div>
-        <div className=" grid flex-none place-items-center gap-2">
           <Button onClick={() => addAlarm(newAlarm)}>追加</Button>
         </div>
+        <WeekGroup
+          defaultWeek={newAlarm.dayOfWeek}
+          onWeekChange={(week) => {
+            setNewAlarm((v) => ({ ...v, dayOfWeek: week }));
+          }}
+        />
+        TT T
       </div>
-      <WeekGroup
-        defaultWeek={newAlarm.dayOfWeek}
-        onWeekChange={(week) => {
-          setNewAlarm((v) => ({ ...v, dayOfWeek: week }));
-        }}
-      />
       <Divider />
       <div className=" flex flex-grow flex-col gap-4">
         {alarms
@@ -151,7 +151,7 @@ export default function Alarms(props: Props) {
         </div>
       </div>
       {isEdited && (
-        <div className=" sticky bottom-16 right-0 grid w-full place-content-center p-4">
+        <div className=" sticky bottom-20 right-0 grid w-full place-content-center">
           <Card className=" animate-slide-in-bottom ease-in">
             <CardBody className=" flex flex-row flex-wrap place-content-center place-items-center gap-4">
               <div>保存されていない変更があります</div>
@@ -173,7 +173,12 @@ export default function Alarms(props: Props) {
                     onClick={() => {
                       startTransition(async () => {
                         const ok = await postAlarms(alarms);
-                        if (ok) setIsEdited(false);
+                        if (ok) {
+                          setIsEdited(false);
+                          toast("success");
+                        } else {
+                          toast("failure");
+                        }
                       });
                     }}
                   >
