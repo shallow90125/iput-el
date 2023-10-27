@@ -1,5 +1,5 @@
-import Providers from "@/components/Providers";
 import Header from "@/components/layout/Header";
+import Providers from "@/components/layout/Providers";
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
