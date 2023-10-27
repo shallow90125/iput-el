@@ -1,10 +1,10 @@
 "use client";
 
-import EditModal from "@/components/EditModal";
-import SwitchState from "@/components/SwitchState";
-import TimeSelect from "@/components/TimeSelect";
-import WeekGroup from "@/components/WeekGroup";
-import WeekStatus from "@/components/WeekStatus";
+import EditModal from "@/components/dashboard/EditModal";
+import SwitchState from "@/components/dashboard/SwitchState";
+import TimeSelect from "@/components/dashboard/TimeSelect";
+import WeekGroup from "@/components/dashboard/WeekGroup";
+import WeekStatus from "@/components/dashboard/WeekStatus";
 import { Alarm } from "@/types/Alarm";
 import { postAlarms } from "@/utils/post-alarms";
 import {
