@@ -175,9 +175,9 @@ export default function Alarms(props: Props) {
                         const ok = await postAlarms(alarms);
                         if (ok) {
                           setIsEdited(false);
-                          toast("success");
+                          toast("保存に成功しました");
                         } else {
-                          toast("failure");
+                          toast("保存に失敗しました");
                         }
                       });
                     }}
