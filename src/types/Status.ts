@@ -1,4 +1,4 @@
 interface Status {
   isOn: boolean;
-  method: number;
+  path: Path;
 }

@@ -3,13 +3,16 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function Defuse() {
+type Props = {
+  path: Path;
+};
+
+export default function Redirect(props: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/defuse");
-    console.log("a!");
+    router.push("/stop" + props.path);
   }, []);
 
-  return <>eee</>;
+  return <></>;
 }

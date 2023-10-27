@@ -1,5 +1,5 @@
-import Alarms from "@/components/Alarms";
-import Defuse from "@/components/Defuse";
+import Alarms from "@/components/dashboard/Alarms";
+import Redirect from "@/components/Redirect";
 import { getAlarms } from "@/utils/get-alarms";
 import { getStatus } from "@/utils/get-status";
 import { getUserDoc } from "@/utils/get-user-doc";
@@ -11,13 +11,12 @@ export default async function Dashboard() {
   const session = await getServerSession();
   const user = await getUserDoc(session?.user.uid);
   const alarms = await getAlarms();
-  // const alarms = undefined;
   const status = await getStatus();
   return (
     <>
       {alarms && status ? (
         status.isOn ? (
-          <Defuse />
+          <Redirect path={status.path} />
         ) : (
           <Alarms alarms={alarms} />
         )
