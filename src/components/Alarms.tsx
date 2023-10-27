@@ -7,15 +7,23 @@ import WeekGroup from "@/components/WeekGroup";
 import WeekStatus from "@/components/WeekStatus";
 import { Alarm } from "@/types/Alarm";
 import { postAlarms } from "@/utils/post-alarms";
-import { Button, Divider, useDisclosure } from "@nextui-org/react";
-import { useState } from "react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Divider,
+  Spinner,
+  useDisclosure,
+} from "@nextui-org/react";
+import { useState, useTransition } from "react";
 
 type Props = {
   alarms: Alarm[];
 };
 
 export default function Alarms(props: Props) {
-  const [alarms, setAlarms] = useState<Alarm[]>(props.alarms);
+  const [isEdited, setIsEdited] = useState<boolean>(false);
+  const [alarms, setAlarms] = useState<Alarm[]>([...props.alarms]);
   const [modalIndex, setModalIndex] = useState(0);
   const [newAlarm, setNewAlarm] = useState<Alarm>({
     hour: 0,
@@ -25,16 +33,20 @@ export default function Alarms(props: Props) {
     timezone: "Asia/Tokyo",
   });
 
+  const [isPending, startTransition] = useTransition();
+
   function addAlarm(addedAlarm: Alarm) {
     const newAlarms = alarms;
     newAlarms.push(addedAlarm);
     setAlarms([...newAlarms]);
+    setIsEdited(true);
   }
 
   function removeAlarm(index: number) {
     const newAlarms = alarms;
     newAlarms.splice(index, 1);
     setAlarms([...newAlarms]);
+    setIsEdited(true);
   }
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -56,7 +68,6 @@ export default function Alarms(props: Props) {
         </div>
         <div className=" grid flex-none place-items-center gap-2">
           <Button onClick={() => addAlarm(newAlarm)}>追加</Button>
-          <Button onClick={() => postAlarms(alarms)}>保存</Button>
         </div>
       </div>
       <WeekGroup
@@ -105,7 +116,7 @@ export default function Alarms(props: Props) {
                   編集
                 </Button>
                 <SwitchState
-                  defaultIsEnabled={alarm.isEnabled}
+                  isSelected={alarm.isEnabled}
                   onValueChange={(isEnabled) => {
                     const newAlarms = alarms;
                     newAlarms[index] = {
@@ -113,6 +124,7 @@ export default function Alarms(props: Props) {
                       isEnabled: isEnabled,
                     };
                     setAlarms([...newAlarms]);
+                    setIsEdited(true);
                   }}
                 />
               </div>
@@ -124,16 +136,55 @@ export default function Alarms(props: Props) {
           <EditModal
             isOpen={isOpen}
             onOpenChange={onOpenChange}
-            onRemove={() => removeAlarm(modalIndex)}
+            onRemove={() => {
+              removeAlarm(modalIndex);
+              setIsEdited(true);
+            }}
             onSave={(newAlarm) => {
               const newAlarms = alarms;
               newAlarms[modalIndex] = newAlarm;
               setAlarms([...newAlarms]);
+              setIsEdited(true);
             }}
             default={alarms[modalIndex]}
           />
         </div>
       </div>
+      {isEdited && (
+        <div className=" sticky bottom-16 right-0 grid w-full place-content-center p-4">
+          <Card className=" animate-slide-in-bottom ease-in">
+            <CardBody className=" flex flex-row flex-wrap place-content-center place-items-center gap-4">
+              <div>保存されていない変更があります</div>
+              <div className=" flex gap-4">
+                <Button
+                  onClick={() => {
+                    setAlarms([...props.alarms]);
+                    setIsEdited(false);
+                  }}
+                  variant="bordered"
+                  color="primary"
+                >
+                  破棄
+                </Button>
+                {isPending ? (
+                  <Spinner />
+                ) : (
+                  <Button
+                    onClick={() => {
+                      startTransition(async () => {
+                        const ok = await postAlarms(alarms);
+                        if (ok) setIsEdited(false);
+                      });
+                    }}
+                  >
+                    保存
+                  </Button>
+                )}
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
