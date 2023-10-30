@@ -74,7 +74,6 @@ export default function Alarms(props: Props) {
             setNewAlarm((v) => ({ ...v, dayOfWeek: week }));
           }}
         />
-        TT T
       </div>
       <Divider />
       <div className=" flex flex-grow flex-col gap-4">
