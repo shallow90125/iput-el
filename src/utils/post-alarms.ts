@@ -2,15 +2,23 @@
 
 import { Alarm } from "@/types/Alarm";
 
-export async function postAlarms(alarms: Alarm[]) {
-  const res = await fetch("http://ok210108.local:4000/alarms", {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/json",
+export async function postAlarms(alarms: Alarm[], piId: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/alarms/${piId}`,
+    {
+      method: "POST",
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(alarms.map((v) => ({ ...v, piId: piId }))),
     },
-    body: JSON.stringify(alarms),
-  }).catch(() => undefined);
+  ).catch((e) => {
+    console.error(e);
+    return undefined;
+  });
+
+  console.log(res?.statusText);
 
   return !!res?.ok;
 }

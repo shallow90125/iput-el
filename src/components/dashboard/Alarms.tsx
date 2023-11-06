@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 
 type Props = {
   alarms: Alarm[];
+  piId: string;
 };
 
 export default function Alarms(props: Props) {
@@ -171,7 +172,7 @@ export default function Alarms(props: Props) {
                   <Button
                     onClick={() => {
                       startTransition(async () => {
-                        const ok = await postAlarms(alarms);
+                        const ok = await postAlarms(alarms, props.piId);
                         if (ok) {
                           setIsEdited(false);
                           toast("保存に成功しました");
