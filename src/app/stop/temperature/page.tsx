@@ -1,8 +1,9 @@
 "use client";
-import { gettemperture } from "@/utils/get-temperture";
-import { stopAlarms } from "@/utils/stop-alarms";
+import { getStop } from "@/utils/get-stop";
+import { getTemperature } from "@/utils/get-temperature";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -13,29 +14,30 @@ import {
   YAxis,
 } from "recharts";
 
-export default function temperature() {
+export default function StopTemperature() {
   const [data, setData] = useState([0, 0, 0, 0, 0]);
-  const [isPending, startTransition] = useTransition();
+  const { data: session } = useSession();
   const router = useRouter();
 
-  const fetchData = () =>
-    startTransition(async () => {
-      const newData = (await gettemperture()) ?? 0;
-      const oldData = data;
-      oldData.splice(0, 1);
-      oldData.push(newData);
-      setData([...oldData]);
-      if (28 <= newData) {
-        stopAlarms();
-        router.push("/dashboard");
-      }
-    });
-
   useEffect(() => {
-    const interval = setInterval(fetchData, 1000);
+    const id = setInterval(async () => {
+      const res = await getTemperature(session?.user.uid);
+      if (!res?.on) {
+        router.push("/dashboard");
+        console.log("aaa");
+        clearInterval(id);
+      } else {
+        const newData = res?.temperature ?? 0;
+        if (28 <= newData) await getStop(session?.user.uid);
+        const oldData = data;
+        oldData.splice(0, 1);
+        oldData.push(newData);
+        setData([...oldData]);
+      }
+    }, 2000);
 
     return () => {
-      clearInterval(interval);
+      clearInterval(id);
     };
   }, []);
 
