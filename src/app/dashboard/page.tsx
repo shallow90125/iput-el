@@ -1,30 +1,21 @@
 import Alarms from "@/components/dashboard/Alarms";
+import NotConnected from "@/components/dashboard/NotConnected";
 import Redirect from "@/components/Redirect";
-import { getAlarms } from "@/utils/get-alarms";
-import { getStatus } from "@/utils/get-status";
-import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
+import { getUser } from "@/utils/get-user";
+import { nextAuthOptions } from "@/utils/next-auth-options";
 import { getServerSession } from "next-auth";
 
 export default async function Dashboard() {
-  const session = await getServerSession();
-  const alarms = await getAlarms();
-  const status = await getStatus();
-  return (
-    <>
-      {alarms && status ? (
-        status.isOn ? (
-          <Redirect path={status.path} />
-        ) : (
-          <Alarms alarms={alarms} />
-        )
-      ) : (
-        <div className=" grid place-items-center gap-4">
-          <div>アラームと接続できません！</div>
-          <Input type="url" label="URL" />
-          <Button>更新</Button>
-        </div>
-      )}
-    </>
+  const session = await getServerSession(nextAuthOptions);
+  const user = await getUser(session?.user.uid);
+
+  return user ? (
+    user.on ? (
+      <Redirect mode={user.mode} />
+    ) : (
+      <Alarms alarms={user.alarms} piId={user.piId} />
+    )
+  ) : (
+    <NotConnected uid={session?.user.uid ?? ""} />
   );
 }
