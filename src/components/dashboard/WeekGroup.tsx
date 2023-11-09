@@ -18,7 +18,6 @@ export default function WeekGroup(props: Props) {
       value={week}
       defaultValue={props.defaultWeek.map((v) => String(v))}
       onChange={(event) => {
-        console.log(event);
         setWeek(event as string[]);
         props.onWeekChange(
           (event as string[])

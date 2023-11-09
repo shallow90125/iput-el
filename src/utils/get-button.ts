@@ -1,19 +1,20 @@
 "use server";
 
 import { PiDoc } from "@/types/PiDoc";
+import { zEnv } from "./env";
 
 export async function getButton(
-  uid: string | undefined,
+  piId: string | undefined,
 ): Promise<Pick<PiDoc, "on"> | undefined> {
-  if (!uid) return undefined;
+  if (!piId) return undefined;
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/temperature/${uid}`,
-    {
-      method: "GET",
-      cache: "no-store",
+  const res = await fetch(`${zEnv.SERVER_URL}/pi/${piId}/button`, {
+    method: "GET",
+    cache: "no-store",
+    headers: {
+      authorization: `Bearer ${zEnv.SERVER_TOKEN}`,
     },
-  ).catch(() => undefined);
+  }).catch(() => undefined);
 
   if (!res?.ok) return undefined;
 

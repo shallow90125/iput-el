@@ -1,20 +1,20 @@
 "use server";
 
-import { Alarm } from "@/types/Alarm";
 import { PiDoc } from "@/types/PiDoc";
+import { zEnv } from "./env";
 
 export async function getUser(
   uid: string | undefined,
-): Promise<(PiDoc & { alarms: Alarm[] }) | undefined> {
+): Promise<PiDoc | undefined> {
   if (!uid) return undefined;
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SERVER_ADDRESS}/user/${uid}`,
-    {
-      method: "GET",
-      cache: "no-store",
+  const res = await fetch(`${zEnv.SERVER_URL}/user/${uid}`, {
+    method: "GET",
+    cache: "no-store",
+    headers: {
+      authorization: `Bearer ${zEnv.SERVER_TOKEN}`,
     },
-  ).catch(() => undefined);
+  }).catch(() => undefined);
 
   if (!res?.ok) return undefined;
 

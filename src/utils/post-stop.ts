@@ -3,22 +3,17 @@
 import { revalidatePath } from "next/cache";
 import { zEnv } from "./env";
 
-export async function postUser(
-  uid: string | undefined,
-  piId: string | undefined,
-): Promise<boolean> {
+export async function postStop(piId: string | undefined): Promise<boolean> {
   revalidatePath("/dashboard", "page");
 
-  if (!uid || !piId) return false;
+  if (!piId) return false;
 
-  const res = await fetch(`${zEnv.SERVER_URL}/user/${uid}`, {
+  const res = await fetch(`${zEnv.SERVER_URL}/pi/${piId}/stop`, {
     method: "POST",
     cache: "no-store",
     headers: {
-      "Content-Type": "application/json",
       authorization: `Bearer ${zEnv.SERVER_TOKEN}`,
     },
-    body: JSON.stringify({ piId: piId }),
   }).catch(() => undefined);
 
   if (!res?.ok) return false;

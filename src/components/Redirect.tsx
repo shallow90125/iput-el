@@ -1,19 +1,19 @@
 "use client";
 
-import { Mode } from "@/types/PiDoc";
+import Loading from "@/app/loading";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 type Props = {
-  mode: Mode;
+  href: string;
 };
 
 export default function Redirect(props: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/stop/" + props.mode);
+    router.push(props.href);
   }, []);
 
-  return <></>;
+  return <Loading />;
 }

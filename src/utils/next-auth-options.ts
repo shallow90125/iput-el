@@ -5,6 +5,7 @@ import {
 } from "firebase/auth";
 import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { zEnv } from "./env";
 import { initApp } from "./init-app";
 
 export const nextAuthOptions: NextAuthOptions = {
@@ -61,7 +62,7 @@ export const nextAuthOptions: NextAuthOptions = {
   pages: {
     signIn: "/signin",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: zEnv.NEXTAUTH_SECRET,
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) token.user = user.user;

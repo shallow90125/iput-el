@@ -3,19 +3,15 @@
 import Loading from "@/app/loading";
 import { postUser } from "@/utils/post-user";
 import { Button, Input } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 type Props = {
-  uid: string;
+  uid: string | undefined;
 };
 
 export default function NotConnected(props: Props) {
   const [input, setInput] = useState("");
   const [isPending, startTransition] = useTransition();
-  const { data: session } = useSession();
-  const router = useRouter();
 
   return isPending ? (
     <Loading />
@@ -26,8 +22,7 @@ export default function NotConnected(props: Props) {
       <Button
         onClick={() => {
           startTransition(async () => {
-            const res = await postUser(session?.user.uid, input);
-            if (res) router.push("/redirect");
+            await postUser(props.uid, input);
           });
         }}
       >
