@@ -8,6 +8,13 @@ export default function Home() {
       <Link href="/dashboard">
         <Button>Go to Dashboard</Button>
       </Link>
+      {(Object.keys(process.env) as (keyof typeof process.env)[]).map(
+        (v, i) => (
+          <div key={i}>
+            {v}: {process.env[v]}
+          </div>
+        ),
+      )}
     </div>
   );
 }
