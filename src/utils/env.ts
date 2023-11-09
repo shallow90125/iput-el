@@ -1,16 +1,19 @@
 import { z } from "zod";
 
+const varSchema = z.string().min(1);
+
 const envSchema = z.object({
-  NEXTAUTH_URL: z.string(),
-  NEXTAUTH_SECRET: z.string(),
-  SERVER_URL: z.string(),
-  NEXT_PUBLIC_API_KEY: z.string(),
-  NEXT_PUBLIC_AUTH_DOMAIN: z.string(),
-  NEXT_PUBLIC_PROJECT_ID: z.string(),
-  NEXT_PUBLIC_STORAGE_BUCKET: z.string(),
-  NEXT_PUBLIC_MESSAGING_SENDER_ID: z.string(),
-  NEXT_PUBLIC_APP_ID: z.string(),
-  NEXT_PUBLIC_MEASUREMENT_ID: z.string(),
+  NEXTAUTH_URL: varSchema,
+  NEXTAUTH_SECRET: varSchema,
+  SERVER_URL: varSchema,
+  SERVER_TOKEN: varSchema,
+  NEXT_PUBLIC_API_KEY: varSchema,
+  NEXT_PUBLIC_AUTH_DOMAIN: varSchema,
+  NEXT_PUBLIC_PROJECT_ID: varSchema,
+  NEXT_PUBLIC_STORAGE_BUCKET: varSchema,
+  NEXT_PUBLIC_MESSAGING_SENDER_ID: varSchema,
+  NEXT_PUBLIC_APP_ID: varSchema,
+  NEXT_PUBLIC_MEASUREMENT_ID: varSchema,
 });
 
 export const zEnv = envSchema.parse(
