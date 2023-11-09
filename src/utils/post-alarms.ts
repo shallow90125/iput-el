@@ -25,7 +25,5 @@ export async function postAlarms(
     return undefined;
   });
 
-  console.log(res?.statusText);
-
   return !!res?.ok;
 }

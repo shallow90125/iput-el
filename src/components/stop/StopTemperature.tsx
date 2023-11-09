@@ -30,7 +30,6 @@ export default function StopTemperature(props: Props) {
       if (!res) {
         router.push("/dashboard");
         clearInterval(id);
-        console.log("b");
         return;
       }
 
@@ -43,7 +42,6 @@ export default function StopTemperature(props: Props) {
       if (28 <= newData) {
         await postStop(props.piId);
         router.push("/dashboard");
-        console.log("a");
         clearInterval(id);
       }
     }, 2000);
