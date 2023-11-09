@@ -172,7 +172,7 @@ export default function Alarms(props: Props) {
                   <Button
                     onClick={() => {
                       startTransition(async () => {
-                        const ok = await postAlarms(alarms, props.piId);
+                        const ok = await postAlarms(props.piId, alarms);
                         if (ok) {
                           setIsEdited(false);
                           toast("保存に成功しました");

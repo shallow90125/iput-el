@@ -1,7 +1,7 @@
 "use client";
-import { getStop } from "@/utils/get-stop";
+
 import { getTemperature } from "@/utils/get-temperature";
-import { useSession } from "next-auth/react";
+import { postStop } from "@/utils/post-stop";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -14,25 +14,37 @@ import {
   YAxis,
 } from "recharts";
 
-export default function StopTemperature() {
+type Props = {
+  uid: string;
+  piId: string;
+};
+
+export default function StopTemperature(props: Props) {
   const [data, setData] = useState([0, 0, 0, 0, 0]);
-  const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     const id = setInterval(async () => {
-      const res = await getTemperature(session?.user.uid);
-      if (!res?.on) {
+      const res = await getTemperature(props.piId);
+
+      if (!res) {
         router.push("/dashboard");
-        console.log("aaa");
         clearInterval(id);
-      } else {
-        const newData = res?.temperature ?? 0;
-        if (28 <= newData) await getStop(session?.user.uid);
-        const oldData = data;
-        oldData.splice(0, 1);
-        oldData.push(newData);
-        setData([...oldData]);
+        console.log("b");
+        return;
+      }
+
+      const newData = res.temperature;
+      const oldData = data;
+      oldData.splice(0, 1);
+      oldData.push(newData);
+      setData([...oldData]);
+
+      if (28 <= newData) {
+        await postStop(props.piId);
+        router.push("/dashboard");
+        console.log("a");
+        clearInterval(id);
       }
     }, 2000);
 
