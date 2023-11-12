@@ -53,6 +53,7 @@ export default function StopTemperature(props: Props) {
 
   return (
     <div className=" grid place-items-center gap-4 place-self-stretch p-4">
+      <div>センサーを40℃まで温めて</div>
       <div className=" place-self-stretch pr-12">
         <ResponsiveContainer className=" block place-self-stretch">
           <LineChart

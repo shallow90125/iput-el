@@ -8,6 +8,7 @@ export async function postUser(
   piId: string | undefined,
 ): Promise<boolean> {
   revalidatePath("/dashboard", "page");
+  revalidatePath("/stop", "page");
 
   if (!uid || !piId) return false;
 

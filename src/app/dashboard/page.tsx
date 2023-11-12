@@ -1,6 +1,6 @@
 import Alarms from "@/components/dashboard/Alarms";
 import NotConnected from "@/components/dashboard/NotConnected";
-import Redirect from "@/components/Redirect";
+import Stop from "@/components/dashboard/Stop";
 import { getAlarms } from "@/utils/get-alarms";
 import { getUser } from "@/utils/get-user";
 import { nextAuthOptions } from "@/utils/next-auth-options";
@@ -15,7 +15,7 @@ export default async function Dashboard() {
 
   return user ? (
     user.on ? (
-      <Redirect href="/stop" />
+      <Stop />
     ) : (
       <Alarms alarms={alarms ?? []} piId={user.piId} />
     )

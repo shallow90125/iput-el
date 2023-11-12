@@ -5,6 +5,7 @@ import { zEnv } from "./env";
 
 export async function postStop(piId: string | undefined): Promise<boolean> {
   revalidatePath("/dashboard", "page");
+  revalidatePath("/stop", "page");
 
   if (!piId) return false;
 
