@@ -9,6 +9,7 @@ export async function postAlarms(
   alarms: Alarm[],
 ): Promise<boolean> {
   revalidatePath("/dashboard", "page");
+  revalidatePath("/stop", "page");
 
   if (!piId) return false;
 
