@@ -39,7 +39,7 @@ export default function StopTemperature(props: Props) {
       oldData.push(newData);
       setData([...oldData]);
 
-      if (28 <= newData) {
+      if (29 < newData) {
         await postStop(props.piId);
         router.push("/dashboard");
         clearInterval(id);
