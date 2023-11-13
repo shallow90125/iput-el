@@ -11,7 +11,7 @@ export default function WeekStatus(props: Props): React.ReactNode {
   }
   if (props.week.length == 0) {
     const date = new Date();
-    const day = date.getDate() + 1;
+    const day = date.getDate();
     return <div>{day}日</div>;
   } else {
     return <div>毎週:{props.week.map((v) => weeks[v]).join(", ")}</div>;
